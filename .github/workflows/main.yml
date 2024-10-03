@@ -20,11 +20,19 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
+        cache: 'pip'  # Enable pip caching
+
+    - name: Set cache directory
+      run: |
+        # Set a custom cache directory that the runner can access
+        mkdir -p $HOME/.cache/pip
+        export PIP_CACHE_DIR=$HOME/.cache/pip
+        echo "PIP_CACHE_DIR=${PIP_CACHE_DIR}" >> $GITHUB_ENV
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt --cache-dir $PIP_CACHE_DIR
 
     - name: Run tests
       run: |
